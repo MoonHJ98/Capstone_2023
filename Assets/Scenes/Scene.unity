@@ -381,7 +381,7 @@ MonoBehaviour:
   followSpeed: 10
   sensitivity: 500
   maxX: 70
-  minX: -60
+  minX: -40
   rotX: 0
   rotY: 0
   realCamera: {fileID: 963194228}
@@ -608,6 +608,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8294764487174099494, guid: 857318f871d633d4bb03c3e3adfddf64, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: -8294764487174099494, guid: 857318f871d633d4bb03c3e3adfddf64, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 6d4b04f4598ae604f82b182deb3be9f8, type: 2}
     - target: {fileID: 919132149155446097, guid: 857318f871d633d4bb03c3e3adfddf64, type: 3}
       propertyPath: m_Name
       value: Player

@@ -19,6 +19,8 @@ public class PlayerMovement : MonoBehaviour
     public float smoothness = 7f;
 
     public bool toggleCameraRotation;
+
+    private bool[] keyCheck = new bool[4];
     // Start is called before the first frame update
     void Start()
     {
@@ -32,10 +34,10 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.LeftControl))
-            toggleCameraRotation = true; // 둘러보기 활성화
-        else
-            toggleCameraRotation = false; // 둘러보기 비활성화
+        //if (Input.GetKey(KeyCode.LeftControl))
+        //    toggleCameraRotation = true; // 둘러보기 활성화
+        //else
+        //    toggleCameraRotation = false; // 둘러보기 비활성화
 
         if (Input.GetKey(KeyCode.LeftShift)) // 달리기 활성화
             run = true;
@@ -49,6 +51,11 @@ public class PlayerMovement : MonoBehaviour
 
     void InputMovement()
     {
+        keyCheck[0] = false;
+        keyCheck[1] = false;
+        keyCheck[2] = false;
+        keyCheck[3] = false;
+
         finalSpeed = (run) ? runSpeed : speed;
 
 
@@ -57,29 +64,67 @@ public class PlayerMovement : MonoBehaviour
 
         Vector3 MoveDirection = forward * Input.GetAxisRaw("Vertical") + right * Input.GetAxisRaw("Horizontal");
 
+
         if (Input.GetKey(KeyCode.W))
-            _controller.Move(forward * finalSpeed * Time.deltaTime);
-
-        if (Input.GetKey(KeyCode.S))
-            _controller.Move(forward * -finalSpeed * Time.deltaTime);
-     
-
-        if (Input.GetKey(KeyCode.A))
-            _controller.Move(right * -finalSpeed * Time.deltaTime);
-      
-        if (Input.GetKey(KeyCode.D))
-            _controller.Move(right * finalSpeed * Time.deltaTime);
-  
-
-        float percent = ((run) ? 1 : 0.5f) * MoveDirection.normalized.magnitude;
-        _animator.SetFloat("move", percent,0.1f, Time.deltaTime);
-    }
-    void ToggleCamaraRotation()
-    {
-        if (toggleCameraRotation != true)
         {
             Vector3 playerRotate = Vector3.Scale(_camera.transform.forward, new Vector3(1, 0, 1)); // 플레이어의 z, x 바꿔주기
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(playerRotate), Time.deltaTime * smoothness);
+            keyCheck[0] = true;
+            _controller.Move(forward * finalSpeed * Time.deltaTime);
+
         }
+
+        if (Input.GetKey(KeyCode.S))
+        {
+            Vector3 playerRotate = Vector3.Scale(_camera.transform.forward * -1, new Vector3(1, 0, 1)); // 플레이어의 z, x 바꿔주기
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(playerRotate), Time.deltaTime * smoothness);
+            keyCheck[1] = true;
+            _controller.Move(forward * finalSpeed * Time.deltaTime);
+
+
+        }
+
+
+        if (Input.GetKey(KeyCode.A))
+        {
+            Vector3 playerRotate = Vector3.Scale(_camera.transform.right * -1, new Vector3(1, 0, 1)); // 플레이어의 z, x 바꿔주기
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(playerRotate), Time.deltaTime * smoothness);
+            keyCheck[2] = true;
+
+            if(keyCheck[0] == true || keyCheck[1] == true)
+                _controller.Move(forward * finalSpeed * Time.deltaTime * 0.025f);
+            else
+                _controller.Move(forward * finalSpeed * Time.deltaTime);
+
+
+
+        }
+
+        if (Input.GetKey(KeyCode.D))
+        {
+            Vector3 playerRotate = Vector3.Scale(_camera.transform.right, new Vector3(1, 0, 1)); // 플레이어의 z, x 바꿔주기
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(playerRotate), Time.deltaTime * smoothness);
+            keyCheck[3] = true;
+
+            if (keyCheck[0] == true || keyCheck[1] == true)
+                _controller.Move(forward * finalSpeed * Time.deltaTime * 0.025f);
+            else
+                _controller.Move(forward * finalSpeed * Time.deltaTime);
+
+        }
+
+
+
+
+        float percent = ((run) ? 1 : 0.5f) * MoveDirection.normalized.magnitude;
+        _animator.SetFloat("move", percent, 0.1f, Time.deltaTime);
+    }
+    void ToggleCamaraRotation()
+    {
+        //if (toggleCameraRotation != true)
+        //{
+        //    Vector3 playerRotate = Vector3.Scale(_camera.transform.forward, new Vector3(1, 0, 1)); // 플레이어의 z, x 바꿔주기
+        //    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(playerRotate), Time.deltaTime * smoothness);
+        //}
     }
 }
