@@ -20,6 +20,7 @@ public class PlayerMovement : MonoBehaviour
 
     public bool toggleCameraRotation;
 
+
     private bool[] keyCheck = new bool[4];
     // Start is called before the first frame update
     void Start()
@@ -34,23 +35,24 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (Input.GetKey(KeyCode.LeftControl))
-        //    toggleCameraRotation = true; // 둘러보기 활성화
-        //else
-        //    toggleCameraRotation = false; // 둘러보기 비활성화
 
         if (Input.GetKey(KeyCode.LeftShift)) // 달리기 활성화
             run = true;
         else
             run = false; // 달리기 비활성화
 
-
-        ToggleCamaraRotation();
+        InputDodge();
         InputMovement();
+        InputAttack();
+
     }
 
     void InputMovement()
     {
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") ||
+            _animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2"))
+            return;
+
         keyCheck[0] = false;
         keyCheck[1] = false;
         keyCheck[2] = false;
@@ -119,12 +121,23 @@ public class PlayerMovement : MonoBehaviour
         float percent = ((run) ? 1 : 0.5f) * MoveDirection.normalized.magnitude;
         _animator.SetFloat("move", percent, 0.1f, Time.deltaTime);
     }
-    void ToggleCamaraRotation()
+
+    void InputAttack()
     {
-        //if (toggleCameraRotation != true)
-        //{
-        //    Vector3 playerRotate = Vector3.Scale(_camera.transform.forward, new Vector3(1, 0, 1)); // 플레이어의 z, x 바꿔주기
-        //    transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(playerRotate), Time.deltaTime * smoothness);
-        //}
+        if (Input.GetKeyDown(KeyCode.Mouse0))
+        {
+            _animator.SetTrigger("onWeaponAttack");
+        }
+    }
+
+    void InputDodge()
+    {
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"))
+            return;
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            _animator.SetTrigger("doDodge");
+        }
     }
 }
