@@ -12,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     public float speed = 5f;
     public float runSpeed = 8f;
     public float finalSpeed;
+    public float dodgeSpeed = 5f;
+
     public bool run;
 
     public float move;
@@ -50,7 +52,9 @@ public class PlayerMovement : MonoBehaviour
     void InputMovement()
     {
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") ||
-            _animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2"))
+            _animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2") ||
+            _animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"))
+
             return;
 
         keyCheck[0] = false;
@@ -133,7 +137,11 @@ public class PlayerMovement : MonoBehaviour
     void InputDodge()
     {
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"))
+        {
+            _controller.Move(transform.forward * dodgeSpeed * Time.deltaTime);
+
             return;
+        }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {

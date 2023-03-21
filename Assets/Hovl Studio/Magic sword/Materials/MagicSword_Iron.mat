@@ -87,7 +87,7 @@ Material:
     m_Colors:
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 1, g: 1, b: 1, a: 1}
-    - _LightDir: {r: -0.45356664, g: -0.7660444, b: -0.45547044, a: 0}
+    - _LightDir: {r: -0.77198464, g: -0.24572845, b: 0.5862229, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &1726796780423494762
 MonoBehaviour:
