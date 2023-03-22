@@ -4,9 +4,18 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
+    public enum MovementState {IDLE, MOVE, ATTACK, DODGE};
+    public enum DealState { NORMAL, DEALTIME};
+
+    public MovementState movementState = MovementState.MOVE;
+    public DealState dealState = DealState.NORMAL;
+
     Animator _animator;
     Camera _camera;
     CharacterController _controller;
+    public ParticleSystem swordTrail;
+    public ParticleSystem swordParticle;
+
 
 
     public float speed = 5f;
@@ -22,6 +31,8 @@ public class PlayerMovement : MonoBehaviour
 
     public bool toggleCameraRotation;
 
+    public Vector3 DodgeDir;
+
 
     private bool[] keyCheck = new bool[4];
     // Start is called before the first frame update
@@ -32,6 +43,8 @@ public class PlayerMovement : MonoBehaviour
         _controller = this.GetComponent<CharacterController>();
         run = false;
         move = 0f;
+        swordTrail.Stop();
+        swordParticle.Stop();
     }
 
     // Update is called once per frame
@@ -47,6 +60,27 @@ public class PlayerMovement : MonoBehaviour
         InputMovement();
         InputAttack();
 
+
+        if (dealState == DealState.NORMAL)
+        {
+            if (movementState == MovementState.ATTACK)
+            {
+                if (swordTrail.isStopped)
+                {
+                    swordTrail.Play();
+                    swordParticle.Play();
+                }
+            }
+            else
+            {
+                if (swordTrail.isPlaying)
+                {
+                    swordTrail.Stop();
+                    swordParticle.Stop();
+                }
+            }
+        }
+
     }
 
     void InputMovement()
@@ -54,8 +88,8 @@ public class PlayerMovement : MonoBehaviour
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") ||
             _animator.GetCurrentAnimatorStateInfo(0).IsName("Attack2") ||
             _animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"))
-
             return;
+
 
         keyCheck[0] = false;
         keyCheck[1] = false;
@@ -77,6 +111,7 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(playerRotate), Time.deltaTime * smoothness);
             keyCheck[0] = true;
             _controller.Move(forward * finalSpeed * Time.deltaTime);
+            movementState = MovementState.MOVE;
 
         }
 
@@ -86,6 +121,7 @@ public class PlayerMovement : MonoBehaviour
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(playerRotate), Time.deltaTime * smoothness);
             keyCheck[1] = true;
             _controller.Move(forward * finalSpeed * Time.deltaTime);
+            movementState = MovementState.MOVE;
 
 
         }
@@ -102,6 +138,7 @@ public class PlayerMovement : MonoBehaviour
             else
                 _controller.Move(forward * finalSpeed * Time.deltaTime);
 
+            movementState = MovementState.MOVE;
 
 
         }
@@ -116,6 +153,7 @@ public class PlayerMovement : MonoBehaviour
                 _controller.Move(forward * finalSpeed * Time.deltaTime * 0.025f);
             else
                 _controller.Move(forward * finalSpeed * Time.deltaTime);
+            movementState = MovementState.MOVE;
 
         }
 
@@ -128,9 +166,23 @@ public class PlayerMovement : MonoBehaviour
 
     void InputAttack()
     {
+        //if (movementState == MovementState.DODGE)
+        //    return;
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
+            movementState = MovementState.ATTACK;
+   
             _animator.SetTrigger("onWeaponAttack");
+
+            if (dealState == DealState.NORMAL)
+            {
+                if (swordTrail.isStopped)
+                {
+                    swordTrail.Play();
+                    swordParticle.Play();
+                }
+            }
+
         }
     }
 
@@ -138,14 +190,60 @@ public class PlayerMovement : MonoBehaviour
     {
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"))
         {
-            _controller.Move(transform.forward * dodgeSpeed * Time.deltaTime);
+            _controller.Move(DodgeDir * dodgeSpeed * Time.deltaTime);
+            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(DodgeDir), Time.deltaTime * smoothness);
 
+            movementState = MovementState.DODGE;
             return;
         }
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             _animator.SetTrigger("doDodge");
+            movementState = MovementState.DODGE;
+           
+            if(Input.GetKey(KeyCode.A))
+            {
+                DodgeDir = _camera.transform.right.normalized * -1;
+                if(Input.GetKey(KeyCode.W))
+                {
+                    DodgeDir += _camera.transform.forward.normalized;
+                    DodgeDir.y = 0;
+                }
+                else if (Input.GetKey(KeyCode.S))
+                {
+                    DodgeDir += _camera.transform.forward.normalized * -1;
+                    DodgeDir.y = 0;
+                }
+            }
+            else if (Input.GetKey(KeyCode.D))
+            {
+                DodgeDir = _camera.transform.right.normalized;
+                if (Input.GetKey(KeyCode.W))
+                {
+                    DodgeDir += _camera.transform.forward.normalized;
+                    DodgeDir.y = 0;
+                }
+                else if (Input.GetKey(KeyCode.S))
+                {
+                    DodgeDir += _camera.transform.forward.normalized * -1;
+                    DodgeDir.y = 0;
+                }
+
+            }
+            else if (Input.GetKey(KeyCode.W))
+            {
+                DodgeDir = _camera.transform.forward.normalized;
+                DodgeDir.y = 0;
+
+            }
+            else if (Input.GetKey(KeyCode.S))
+            {
+                DodgeDir = _camera.transform.forward.normalized * -1;
+                DodgeDir.y = 0;
+
+            }
+
         }
     }
 }
