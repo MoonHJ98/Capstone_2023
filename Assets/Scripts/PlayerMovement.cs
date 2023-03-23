@@ -7,6 +7,13 @@ public class PlayerMovement : MonoBehaviour
     public enum MovementState {IDLE, MOVE, ATTACK, DODGE};
     public enum DealState { NORMAL, DEALTIME};
 
+    [System.Serializable]
+    public class Slash
+    {
+        public GameObject slashObject;
+        public float delay;
+    }
+
     public MovementState movementState = MovementState.MOVE;
     public DealState dealState = DealState.NORMAL;
 
@@ -35,6 +42,9 @@ public class PlayerMovement : MonoBehaviour
 
 
     private bool[] keyCheck = new bool[4];
+
+    public List<Slash> slashes;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -45,6 +55,7 @@ public class PlayerMovement : MonoBehaviour
         move = 0f;
         swordTrail.Stop();
         swordParticle.Stop();
+        DisableSlash();
     }
 
     // Update is called once per frame
@@ -79,6 +90,11 @@ public class PlayerMovement : MonoBehaviour
                     swordParticle.Stop();
                 }
             }
+        }
+        else
+        {
+            swordTrail.Stop();
+            swordParticle.Stop();
         }
 
     }
@@ -171,7 +187,7 @@ public class PlayerMovement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             movementState = MovementState.ATTACK;
-   
+
             _animator.SetTrigger("onWeaponAttack");
 
             if (dealState == DealState.NORMAL)
@@ -183,6 +199,10 @@ public class PlayerMovement : MonoBehaviour
                 }
             }
 
+            else if (dealState == DealState.DEALTIME)
+            {
+                StartCoroutine(SlashAttack());
+            }
         }
     }
 
@@ -244,6 +264,26 @@ public class PlayerMovement : MonoBehaviour
 
             }
 
+        }
+    }
+
+    IEnumerator SlashAttack()
+    {
+        for (int i = 0; i < slashes.Count; ++i)
+        {
+            yield return new WaitForSeconds(slashes[i].delay);
+            slashes[i].slashObject.SetActive(true);
+        }
+
+        yield return new WaitForSeconds(1);
+        DisableSlash();
+
+    }
+    void DisableSlash()
+    {
+        for(int i = 0; i < slashes.Count; ++i)
+        {
+            slashes[i].slashObject.SetActive(false);
         }
     }
 }
