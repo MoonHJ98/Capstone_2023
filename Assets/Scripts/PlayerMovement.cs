@@ -206,7 +206,7 @@ public class PlayerMovement : MonoBehaviour
         }
     }
 
-    void InputDodge()
+        void InputDodge()
     {
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"))
         {
