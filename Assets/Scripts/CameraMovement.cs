@@ -64,9 +64,9 @@ public class CameraMovement : MonoBehaviour
 
         // 로컬 -> 월드
         finalDir = transform.TransformPoint(dirNormalized * maxDistance);
-
+        
         RaycastHit hit;
-
+        
         if (Physics.Linecast(transform.position, finalDir, out hit))
         {
             finalDistance = Mathf.Clamp(hit.distance, minDistance, maxDistance);
@@ -76,5 +76,7 @@ public class CameraMovement : MonoBehaviour
             finalDistance = maxDistance;
         }
         realCamera.localPosition = Vector3.Lerp(realCamera.localPosition, dirNormalized * finalDistance, Time.deltaTime * smoothness);
+
+
     }
 }

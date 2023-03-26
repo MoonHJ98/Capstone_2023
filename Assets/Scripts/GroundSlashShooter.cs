@@ -17,13 +17,16 @@ public class GroundSlashShooter: MonoBehaviour
     public float pressing = 0f;
     public float shootProjectile = 3f;
 
+    // Camera Shake Test
+    public CameraShake cameraShake;
+    public float duration = 0.2f;
+    public float magnitude = 0.025f;
 
     // Start is called before the first frame update
     void Start()
     {
         playerMoveScript = gameObject.GetComponent<PlayerMovement>();
 
-        
     }
 
     // Update is called once per frame
@@ -43,7 +46,7 @@ public class GroundSlashShooter: MonoBehaviour
                 ShootProjectile();
 
             pressing = 0f;
-
+            StartCoroutine(cameraShake.Shake(0.2f, 0.025f));
         }
     }
 
