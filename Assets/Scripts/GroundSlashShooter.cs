@@ -17,12 +17,13 @@ public class GroundSlashShooter: MonoBehaviour
     public float pressing = 0f;
     public float shootProjectile = 3f;
 
+
     // Start is called before the first frame update
     void Start()
     {
         playerMoveScript = gameObject.GetComponent<PlayerMovement>();
 
-
+        
     }
 
     // Update is called once per frame
