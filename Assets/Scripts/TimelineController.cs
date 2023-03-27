@@ -18,6 +18,7 @@ public class TimelineController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         if (Input.GetKeyDown(KeyCode.P))
         {
             mainCamera.gameObject.SetActive(false);
@@ -28,11 +29,18 @@ public class TimelineController : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.O))
         {
-            mainCamera.gameObject.SetActive(true);
-            cinematicCamera.gameObject.SetActive(false);
-
-            playableDirector.gameObject.SetActive(false);
-            playableDirector.Stop();
+            End();
         }
+
+        
+    }
+    public void End()
+    {
+        mainCamera.gameObject.SetActive(true);
+        cinematicCamera.gameObject.SetActive(false);
+
+        playableDirector.gameObject.SetActive(false);
+        playableDirector.Stop();
+        Debug.Log("end");
     }
 }
