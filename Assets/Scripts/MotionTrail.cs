@@ -31,6 +31,11 @@ public class MotionTrail : MonoBehaviour
         }
     }
 
+    public void ActiveTrailInCinematic()
+    {
+        StartCoroutine(ActivateTrail(activeTime));
+    }
+
     IEnumerator ActivateTrail(float timeActive)
     {
         while(timeActive > 0)
