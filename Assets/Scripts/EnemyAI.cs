@@ -6,45 +6,50 @@ using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
 {
-    NavMeshAgent navMeshAgent;
     GameObject player;
+    Rigidbody rigidBody;
     public Animator _animator;
-    enum State { Sleep, Idle, Run, Punch, PunchTwice, Rush, SideRoll, LeashAttack, StateEnd }
+    enum State { Sleep, Idle, Run, Punch, PunchTwice, Rush, SideRoll, LeashAttack, StateEnd };
     State state;
+
+
 
     public float scanDistance;
     public float attackDistance;
     public float currentDistance;
 
-    public int currentTierdPoint;
-    public int maxTieldPoint;
+    public float moveSpeed;
+    public float rotSpeed;
 
-    public int currentAttackPoint;
-    public int maxAttackPoint;
 
-    private bool checkOnce;
+
     // Start is called before the first frame update
     void Start()
     {
-        navMeshAgent = GetComponent<NavMeshAgent>();
+        moveSpeed = 5f;
+        rotSpeed = 3f;
+        rigidBody = GetComponent<Rigidbody>();
         player = GameObject.FindWithTag("Player");
         state = State.Idle;
 
         scanDistance = 20f;
         attackDistance = 5f;
 
-        currentTierdPoint = 0;
-        maxTieldPoint = 10;
-
-
-        checkOnce = true;
     }
 
     // Update is called once per frame
     void Update()
     {
+
+        
         currentDistance = (player.transform.position - transform.position).magnitude;
 
+
+        UpdateState();
+    }
+
+    private void UpdateState()
+    {
         switch (state)
         {
             case State.Sleep:
@@ -63,7 +68,7 @@ public class EnemyAI : MonoBehaviour
                 UpdatePunchTwice();
                 break;
             case State.Rush:
-                UpdatePunchTwice();
+                UpdateRush();
                 break;
             case State.SideRoll:
                 UpdateSideRoll();
@@ -76,92 +81,73 @@ public class EnemyAI : MonoBehaviour
             default:
                 break;
         }
-
-    }
-
+        return;
+    }    
     private void UpdateSleep()
     {
         return;
     }
     private void UpdateIdle()
     {
+        Debug.Log("Idle");
 
         currentDistance = (player.transform.position - transform.position).magnitude;
-        Debug.Log("Idle");
+
         _animator.SetInteger("move", (int)State.Idle);
 
         if (currentDistance <= scanDistance && currentDistance > attackDistance)
         {
             state = State.Run;
-            //int randomState = Random.Range(0, 1);
-            //switch (randomState)
-            //{
-            //    case 0:
-            //        
-            //        break;
-            //    case 1:
-            //        state = State.Rush;
-            //        break;
-            //}
-
-
         }
         return;
     }
     private void UpdateRun()
     {
-
+        Debug.Log("Run");
         _animator.SetInteger("move", (int)State.Run);
 
+        //에이전트의 이동방향
+        Vector3 direction = player.transform.position - transform.position;
+        //회전각도(쿼터니언) 산출
+        Quaternion rot = Quaternion.LookRotation(direction);
+        //구면선형보간 함수로 부드러운 회전처리
+        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * rotSpeed); // 1f = 회전속도
 
-        navMeshAgent.SetDestination(player.transform.position);
+        transform.position += direction.normalized * Time.deltaTime * moveSpeed;
+        
+        currentDistance = direction.magnitude;
 
-        Debug.Log("Run");
-
-        currentDistance = (player.transform.position - transform.position).magnitude;
         if (currentDistance <= attackDistance)
-        {
-            state = State.Idle;
-            //int randomState = Random.Range(0, 1);
-            //switch (randomState)
-            //{
-            //    case 0:
-            //        state = State.Punch;
-            //        navMeshAgent.SetDestination(transform.position);
-            //        break;
-            //    case 1:
-            //        state = State.PunchTwice;
-            //        break;
-            //}
+        { 
+            int randomState = Random.Range(0, 1); // 변경
+            switch (randomState)
+            {
+                case 0:
+                    state = State.Punch;
+                    break;
+            }
         }
         return;
     }
     private void UpdatePunch()
     {
-        if (checkOnce)
+        Debug.Log("Punch");
+
+        _animator.SetInteger("move", (int)State.Punch);
+
+        currentDistance = (player.transform.position - transform.position).magnitude;
+
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Punch") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
         {
-            currentTierdPoint += 1;
-            checkOnce = false;
+            state = State.Idle;
+            return;
         }
-        _animator.SetTrigger("Punch");
 
 
-        /*
-        if(animation 끝 && currentTierdPoint >= maxTierdPoint)
-        {
-            state = tired;
-            checkOnce = true;
-        }
-        */
         return;
     }
     private void UpdatePunchTwice()
     {
-        if (checkOnce)
-        {
-            currentTierdPoint += 2;
-            checkOnce = false;
-        }
 
         /*
         if(animation 끝 && currentTierdPoint >= maxTierdPoint)
@@ -172,13 +158,18 @@ public class EnemyAI : MonoBehaviour
         */
         return;
     }
-    private void Rush()
+    private void UpdateRush()
     {
-        if (checkOnce)
-        {
-            currentTierdPoint += 4;
-            checkOnce = false;
-        }
+
+        _animator.SetInteger("move", (int)State.Rush);
+        //에이전트의 이동방향
+        Vector3 direction = player.transform.position - transform.position;
+        //회전각도(쿼터니언) 산출
+        Quaternion rot = Quaternion.LookRotation(direction);
+        //구면선형보간 함수로 부드러운 회전처리
+        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 1f); // 1f = 회전속도
+
+        
         /*
         if(animation 끝 && currentTierdPoint >= maxTierdPoint)
         {
@@ -191,11 +182,6 @@ public class EnemyAI : MonoBehaviour
     }
     private void UpdateSideRoll()
     {
-        if (checkOnce)
-        {
-            currentTierdPoint += 4;
-            checkOnce = false;
-        }
 
         /*
         if(animation 끝 && currentTierdPoint >= maxTierdPoint)
@@ -208,11 +194,9 @@ public class EnemyAI : MonoBehaviour
     }
     private void UpdateLeashAttack()
     {
-        if (checkOnce)
-        {
-            currentTierdPoint += 4;
-            checkOnce = false;
-        }
+
+
+
         /*
         if(animation 끝 && currentTierdPoint >= maxTierdPoint)
         {
