@@ -7,10 +7,20 @@ using UnityEngine.AI;
 public class EnemyAI : MonoBehaviour
 {
     GameObject player;
-    Rigidbody rigidBody;
+    NavMeshAgent navMeshAgent;
+    CharacterController characterController;
     public Animator _animator;
-    enum State { Sleep, Idle, Run, Punch, PunchTwice, Rush, SideRoll, LeashAttack, StateEnd };
+    enum State { Patroll, Detect, Attack, StateEnd };
+    enum AniState { Idle, Walk, Jump, Punch_1, Punch_2, AniStateEnd };
     State state;
+
+    public List<Transform> patrollPoints;
+    private List<Transform> patrollPointsCopy;
+    private Transform targetTransform;
+    private bool checkOnce;
+
+    public float jumpPower;
+
 
 
 
@@ -21,191 +31,191 @@ public class EnemyAI : MonoBehaviour
     public float moveSpeed;
     public float rotSpeed;
 
+    float yVelocity;
+    float zVelocity;
+    Vector3 dir;
+
+    public float gravity;
+    public float jumpSpeed;
+
+    public float angle;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        jumpSpeed = 5f;
+        gravity = -20f;
+        jumpPower = 5f;
         moveSpeed = 5f;
         rotSpeed = 3f;
-        rigidBody = GetComponent<Rigidbody>();
+        characterController = GetComponent<CharacterController>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
         player = GameObject.FindWithTag("Player");
-        state = State.Idle;
+        state = State.Patroll;
 
         scanDistance = 20f;
         attackDistance = 5f;
+
+        patrollPointsCopy = new List<Transform>();
+
+        for (int i = 0; i < patrollPoints.Count; ++i)
+            patrollPointsCopy.Add(patrollPoints[i]);
+
+        checkOnce = true;
 
     }
 
     // Update is called once per frame
     void Update()
     {
-
-        
-        currentDistance = (player.transform.position - transform.position).magnitude;
-
-
         UpdateState();
     }
+
 
     private void UpdateState()
     {
         switch (state)
         {
-            case State.Sleep:
-                UpdateSleep();
+            case State.Patroll:
+                UpdatePatroll();
                 break;
-            case State.Idle:
-                UpdateIdle();
+            case State.Detect:
+                UpdateDetect();
                 break;
-            case State.Run:
-                UpdateRun();
-                break;
-            case State.Punch:
-                UpdatePunch();
-                break;
-            case State.PunchTwice:
-                UpdatePunchTwice();
-                break;
-            case State.Rush:
-                UpdateRush();
-                break;
-            case State.SideRoll:
-                UpdateSideRoll();
-                break;
-            case State.LeashAttack:
-                UpdateLeashAttack();
+            case State.Attack:
+                UpdateAttack();
                 break;
             case State.StateEnd:
                 break;
             default:
                 break;
         }
-        return;
-    }    
-    private void UpdateSleep()
-    {
-        return;
     }
-    private void UpdateIdle()
+
+    private void UpdatePatroll()
     {
-        Debug.Log("Idle");
 
-        currentDistance = (player.transform.position - transform.position).magnitude;
-
-        _animator.SetInteger("move", (int)State.Idle);
-
-        if (currentDistance <= scanDistance && currentDistance > attackDistance)
+        if (checkOnce)
         {
-            state = State.Run;
+            int index = Random.Range(0, patrollPointsCopy.Count);
+            targetTransform = patrollPointsCopy[index];
+
+            patrollPointsCopy.RemoveAt(index);
+
+            checkOnce = false;
         }
-        return;
-    }
-    private void UpdateRun()
-    {
-        Debug.Log("Run");
-        _animator.SetInteger("move", (int)State.Run);
 
-        //에이전트의 이동방향
-        Vector3 direction = player.transform.position - transform.position;
-        //회전각도(쿼터니언) 산출
-        Quaternion rot = Quaternion.LookRotation(direction);
-        //구면선형보간 함수로 부드러운 회전처리
-        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * rotSpeed); // 1f = 회전속도
+        _animator.SetInteger("Move", (int)AniState.Walk);
 
-        transform.position += direction.normalized * Time.deltaTime * moveSpeed;
-        
-        currentDistance = direction.magnitude;
 
-        if (currentDistance <= attackDistance)
-        { 
-            int randomState = Random.Range(0, 1); // 변경
-            switch (randomState)
-            {
-                case 0:
-                    state = State.Punch;
-                    break;
-            }
-        }
-        return;
-    }
-    private void UpdatePunch()
-    {
-        Debug.Log("Punch");
+        navMeshAgent.SetDestination(targetTransform.position);
 
-        _animator.SetInteger("move", (int)State.Punch);
+        float length = (targetTransform.position - transform.position).magnitude;
 
-        currentDistance = (player.transform.position - transform.position).magnitude;
-
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Punch") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        if (Input.GetKeyDown(KeyCode.B))
         {
-            state = State.Idle;
+            checkOnce = true;
+            state = State.Detect;
+            navMeshAgent.SetDestination(transform.position);
+
+            patrollPointsCopy.Clear();
+
+            for (int i = 0; i < patrollPoints.Count; ++i)
+                patrollPointsCopy.Add(patrollPoints[i]);
+
             return;
         }
 
-
-        return;
-    }
-    private void UpdatePunchTwice()
-    {
-
-        /*
-        if(animation 끝 && currentTierdPoint >= maxTierdPoint)
+        if (length <= 5f)
         {
-            state = tired;
             checkOnce = true;
+            if (patrollPointsCopy.Count == 0)
+            {
+                for (int i = 0; i < patrollPoints.Count; ++i)
+                    patrollPointsCopy.Add(patrollPoints[i]);
+            }
         }
-        */
-        return;
+
     }
-    private void UpdateRush()
+
+    private void UpdateDetect()
     {
+        _animator.SetInteger("Move", (int)AniState.Jump);
 
-        _animator.SetInteger("move", (int)State.Rush);
-        //에이전트의 이동방향
-        Vector3 direction = player.transform.position - transform.position;
-        //회전각도(쿼터니언) 산출
-        Quaternion rot = Quaternion.LookRotation(direction);
-        //구면선형보간 함수로 부드러운 회전처리
-        transform.rotation = Quaternion.Slerp(transform.rotation, rot, Time.deltaTime * 1f); // 1f = 회전속도
 
-        
-        /*
-        if(animation 끝 && currentTierdPoint >= maxTierdPoint)
+        Vector3 rotate = player.transform.position - transform.position;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rotate), Time.deltaTime * rotate.magnitude);
+
+
+        player = GameObject.FindWithTag("Player");
+
+        if (checkOnce)
         {
-            state = tired;
-            checkOnce = true;
+            yVelocity = jumpPower;
+
+            dir = (player.transform.position - transform.position).normalized * -1f;
+            checkOnce = false;
         }
-        */
-        return;
+
+        yVelocity += gravity * Time.deltaTime;
+
+        dir.y = yVelocity;
+
+        characterController.Move(dir * jumpSpeed * Time.deltaTime);
+
+        if (characterController.collisionFlags == CollisionFlags.Below)
+        {
+            state = State.Attack;
+            navMeshAgent.SetDestination(transform.position);
+
+        }
+
+
 
     }
-    private void UpdateSideRoll()
+
+    private void UpdateAttack()
     {
-
-        /*
-        if(animation 끝 && currentTierdPoint >= maxTierdPoint)
+        if (Input.GetKeyDown(KeyCode.N))
         {
-            state = tired;
             checkOnce = true;
+            state = State.Patroll;
+            navMeshAgent.SetDestination(transform.position);
+
+            patrollPointsCopy.Clear();
+
+            for (int i = 0; i < patrollPoints.Count; ++i)
+                patrollPointsCopy.Add(patrollPoints[i]);
+
+            return;
         }
-        */
-        return;
+
+        _animator.SetInteger("Move", (int)AniState.Punch_1);
+
+        Vector3 _dir = (player.transform.position - transform.position).normalized;
+        // 방향을 바라보는 Quaternion을 구한다.
+        Quaternion _rot = Quaternion.LookRotation(_dir);
+
+
+        Vector3 v = (player.transform.position - transform.position) - transform.forward * -1f;
+
+        angle = Mathf.Atan2(v.z, v.x) * Mathf.Rad2Deg + 180f;
+
+        //if (_animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1f)
+        //{
+        //    checkOnce = true;
+        //    state = State.Patroll;
+        //    navMeshAgent.SetDestination(transform.position);
+        //
+        //    patrollPointsCopy.Clear();
+        //
+        //    for (int i = 0; i < patrollPoints.Count; ++i)
+        //        patrollPointsCopy.Add(patrollPoints[i]);
+        //
+        //    return;
+        //}
+
+
     }
-    private void UpdateLeashAttack()
-    {
-
-
-
-        /*
-        if(animation 끝 && currentTierdPoint >= maxTierdPoint)
-        {
-            state = tired;
-            checkOnce = true;
-        }
-        */
-        return;
-    }
-
-
 }
