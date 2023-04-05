@@ -6622,7 +6622,7 @@ Transform:
   m_GameObject: {fileID: 1212763276}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 4}
+  m_LocalScale: {x: 10, y: 10, z: 10}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -7300,8 +7300,6 @@ MonoBehaviour:
   scanDistance: 0
   attackDistance: 0
   currentDistance: 0
-  moveSpeed: 0
-  rotSpeed: 0
   gravity: 0
   jumpSpeed: 0
   angle: 0
