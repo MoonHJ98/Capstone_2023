@@ -220,7 +220,7 @@ public class EnemyAI : MonoBehaviour
 
         angle = Mathf.Atan2(v.z, v.x) * Mathf.Rad2Deg + 180f;
 
-        attackPattern = AttackPattern.Back_2;
+        attackPattern = AttackPattern.Front_1;
 
         UpdateAttackPattern();
     }
