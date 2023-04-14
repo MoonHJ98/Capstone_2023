@@ -27,7 +27,14 @@ public class EnemyAI : MonoBehaviour
         멀리 있을 때
         달리기
         점프 공격
+
+        앞 230~310
+        오른쪽 130 230
+        뒤 50 ~ 130
+        왼쪽 0 ~ 50, 310 ~ 360
      */
+
+
     enum AttackPattern { Front_1, Front_2, Side_1, Side_2, Back_1, Back_2, AttackPatternEnd }
     State state;
     AttackPattern attackPattern;
@@ -59,6 +66,8 @@ public class EnemyAI : MonoBehaviour
 
     public float angle;
 
+    private bool patternEnd;
+
     // 점프 공격 했을 때 맞는 거리
     float JumpAttackEnableDistance = 35f;
 
@@ -66,6 +75,7 @@ public class EnemyAI : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        patternEnd = true;
         jumpSpeed = 5f;
         gravity = -20f;
         jumpPower = 5f;
@@ -195,6 +205,7 @@ public class EnemyAI : MonoBehaviour
 
         if (characterController.collisionFlags == CollisionFlags.Below)
         {
+            int a = 10;
             if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
             {
                 state = State.Attack;
@@ -220,7 +231,92 @@ public class EnemyAI : MonoBehaviour
 
         angle = Mathf.Atan2(v.z, v.x) * Mathf.Rad2Deg + 180f;
 
-        attackPattern = AttackPattern.Front_1;
+        //attackPattern = AttackPattern.Back_1;
+
+        if (patternEnd == true)
+        {
+            /*
+             앞 230~310
+             오른쪽 130 230
+             뒤 50 ~ 130
+             왼쪽 0 ~ 50, 310 ~ 360
+             */
+        
+            if(angle >= 270 && angle <= 350)
+            {
+                //앞
+                Debug.Log("앞");
+                int pattern = Random.Range(0, 1);
+                switch (pattern)
+                {
+                    case 0:
+                        attackPattern = AttackPattern.Front_1;
+                        break;
+                    case 1:
+                        attackPattern = AttackPattern.Front_2;
+                        break;
+                    default:
+                        break;
+                }
+        
+            }
+            else if(angle > 170 && angle < 270)
+            {
+                //오른쪽
+                Debug.Log("오른쪽");
+                int pattern = Random.Range(0, 1);
+                switch (pattern)
+                {
+                    case 0:
+                        attackPattern = AttackPattern.Side_1;
+                        break;
+                    case 1:
+                        attackPattern = AttackPattern.Side_2;
+                        break;
+                    default:
+                        break;
+                }
+        
+            }
+            else if(angle >= 90 && angle <= 170)
+            {
+                //뒤
+                Debug.Log("뒤");
+                int pattern = Random.Range(0, 1);
+                switch (pattern)
+                {
+                    case 0:
+                        attackPattern = AttackPattern.Back_1;
+                        break;
+                    case 1:
+                        attackPattern = AttackPattern.Back_2;
+                        break;
+                    default:
+                        break;
+                }
+        
+            }
+            else if((angle >= 0 && angle <90) || (angle > 350 && angle < 360))
+            {
+                //왼쪽
+                Debug.Log("왼쪽");
+                int pattern = Random.Range(0, 1);
+                switch (pattern)
+                {
+                    case 0:
+                        attackPattern = AttackPattern.Side_1;
+                        break;
+                    case 1:
+                        attackPattern = AttackPattern.Side_2;
+                        break;
+                    default:
+                        break;
+                }
+        
+            }
+        
+            patternEnd = false;
+        }
 
         UpdateAttackPattern();
     }
@@ -404,6 +500,7 @@ public class EnemyAI : MonoBehaviour
 
 
         Vector3 rotate = player.transform.position - transform.position;
+        rotate.y = 0f;
         transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(rotate), Time.deltaTime * rotate.magnitude);
 
         yVelocity += gravity * Time.deltaTime;
@@ -457,7 +554,10 @@ public class EnemyAI : MonoBehaviour
         {
             aniState = _nextAniState;
             if (_patternEnd == true)
+            {
                 checkOnce = true;
+                patternEnd = true;
+            }
         }
 
     }
@@ -469,7 +569,10 @@ public class EnemyAI : MonoBehaviour
         {
             aniState = _nextAniState;
             if (_patternEnd == true)
+            {
                 checkOnce = true;
+                patternEnd = true;
+            }
         }
     }
     private void UpdateJumpAttack(AniState _nextAniState, bool _patternEnd = false)
@@ -512,7 +615,10 @@ public class EnemyAI : MonoBehaviour
                 isJump = false;
                 aniState = _nextAniState;
                 if (_patternEnd == true)
+                {
                     checkOnce = true;
+                    patternEnd = true;
+                }
             }
         }
 
@@ -527,7 +633,10 @@ public class EnemyAI : MonoBehaviour
         {
             aniState = _nextAniState;
             if (_patternEnd == true)
+            {
                 checkOnce = true;
+                patternEnd = true;
+            }
         }
     }
 
@@ -536,11 +645,14 @@ public class EnemyAI : MonoBehaviour
         _animator.SetInteger("Move", (int)AniState.LeashAttack);
 
 
-        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("LeashAttack") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
-        {
-            aniState = _nextAniState;
-            if (_patternEnd == true)
-                checkOnce = true;
-        }
+        //if (_animator.GetCurrentAnimatorStateInfo(0).IsName("LeashAttack") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
+        //{
+        //    aniState = _nextAniState;
+        //    if (_patternEnd == true)
+        //    {
+        //        checkOnce = true;
+        //        patternEnd = true;
+        //    }
+        //}
     }
 }
