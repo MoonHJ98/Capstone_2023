@@ -20379,6 +20379,29 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character_bace
       objectReference: {fileID: 0}
+    - target: {fileID: 2223639932434330405, guid: 1b04be11b17e3724d84eeb6fed5592eb,
+        type: 3}
+      propertyPath: m_Animation
+      value: 
+      objectReference: {fileID: 1827226128182048838, guid: 74ea4c6a81714c841bbcf27bf54971bf,
+        type: 3}
+    - target: {fileID: 2223639932434330405, guid: 1b04be11b17e3724d84eeb6fed5592eb,
+        type: 3}
+      propertyPath: m_Animations.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2223639932434330405, guid: 1b04be11b17e3724d84eeb6fed5592eb,
+        type: 3}
+      propertyPath: m_Animations.Array.data[0]
+      value: 
+      objectReference: {fileID: 1827226128182048838, guid: 74ea4c6a81714c841bbcf27bf54971bf,
+        type: 3}
+    - target: {fileID: 2223639932434330405, guid: 1b04be11b17e3724d84eeb6fed5592eb,
+        type: 3}
+      propertyPath: m_Animations.Array.data[1]
+      value: 
+      objectReference: {fileID: 1827226128182048838, guid: 74ea4c6a81714c841bbcf27bf54971bf,
+        type: 3}
     - target: {fileID: 4300187835618510694, guid: 1b04be11b17e3724d84eeb6fed5592eb,
         type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -20392,16 +20415,7 @@ PrefabInstance:
     - target: {fileID: 5866666021909216657, guid: 1b04be11b17e3724d84eeb6fed5592eb,
         type: 3}
       propertyPath: m_WarningMessage
-      value: "\nBinding warning: Some generic clip(s) animate transforms that are
-        already bound by a Humanoid avatar. These transforms can only be changed
-        by Humanoid clips.\n\tTransform 'Bip001 Spine1'\n\tTransform 'Bip001 Spine'\n\tTransform
-        'Bip001'\n\tTransform 'Bip001 Neck'\n\tTransform 'Bip001 Head'\n\tTransform
-        'Bip001 Spine1'\n\tTransform 'Bip001 Spine'\n\tTransform 'Bip001'\n\tTransform
-        'Bip001 Neck'\n\tTransform 'Bip001 Pelvis'\n\tand more ...\n\tFrom animation
-        clip 'Take 001'\n\tFrom animation clip 'Take 001'\n\tFrom animation clip
-        'Take 001'\n\tFrom animation clip 'Take 001'\n\tFrom animation clip 'Take
-        001'\n\tFrom animation clip 'Take 001'\n\tFrom animation clip 'Take 001'\n\tFrom
-        animation clip 'Take 001'"
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6649149879722499765, guid: 1b04be11b17e3724d84eeb6fed5592eb,
         type: 3}
