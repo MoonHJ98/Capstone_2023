@@ -20409,13 +20409,28 @@ PrefabInstance:
       objectReference: {fileID: 2100000, guid: c5285431468735f4685781e147257f5e, type: 2}
     - target: {fileID: 5866666021909216657, guid: 1b04be11b17e3724d84eeb6fed5592eb,
         type: 3}
+      propertyPath: m_Avatar
+      value: 
+      objectReference: {fileID: 9000000, guid: 1b04be11b17e3724d84eeb6fed5592eb, type: 3}
+    - target: {fileID: 5866666021909216657, guid: 1b04be11b17e3724d84eeb6fed5592eb,
+        type: 3}
       propertyPath: m_Controller
       value: 
       objectReference: {fileID: 9100000, guid: 2d810312f358c6b499aec6840bca2981, type: 2}
     - target: {fileID: 5866666021909216657, guid: 1b04be11b17e3724d84eeb6fed5592eb,
         type: 3}
+      propertyPath: m_CullingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 1b04be11b17e3724d84eeb6fed5592eb,
+        type: 3}
       propertyPath: m_WarningMessage
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 5866666021909216657, guid: 1b04be11b17e3724d84eeb6fed5592eb,
+        type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6649149879722499765, guid: 1b04be11b17e3724d84eeb6fed5592eb,
         type: 3}
