@@ -177,6 +177,9 @@ public class PlayerMovement : MonoBehaviour
 
 
         float percent = ((run) ? 1 : 0.5f) * MoveDirection.normalized.magnitude;
+
+        Debug.Log(percent);
+
         _animator.SetFloat("move", percent, 0.1f, Time.deltaTime);
     }
 
