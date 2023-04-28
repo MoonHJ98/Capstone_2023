@@ -15,13 +15,11 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public MovementState movementState = MovementState.MOVE;
-    public DealState dealState = DealState.NORMAL;
+    public DealState dealState;
 
     Animator _animator;
     Camera _camera;
     CharacterController _controller;
-    public ParticleSystem swordTrail;
-    public ParticleSystem swordParticle;
 
 
 
@@ -48,13 +46,14 @@ public class PlayerMovement : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        dealState = DealState.DEALTIME;
+
         _animator = this.GetComponent<Animator>();
         _camera = Camera.main;
         _controller = this.GetComponent<CharacterController>();
         run = true;
         move = 0f;
-        swordTrail.Stop();
-        swordParticle.Stop();
+
         DisableSlash();
     }
 
@@ -67,31 +66,6 @@ public class PlayerMovement : MonoBehaviour
         InputMovement();
         InputAttack();
 
-
-        if (dealState == DealState.NORMAL)
-        {
-            if (movementState == MovementState.ATTACK)
-            {
-                if (swordTrail.isStopped)
-                {
-                    swordTrail.Play();
-                    swordParticle.Play();
-                }
-            }
-            else
-            {
-                if (swordTrail.isPlaying)
-                {
-                    swordTrail.Stop();
-                    swordParticle.Stop();
-                }
-            }
-        }
-        else
-        {
-            swordTrail.Stop();
-            swordParticle.Stop();
-        }
 
     }
 
@@ -188,17 +162,7 @@ public class PlayerMovement : MonoBehaviour
             movementState = MovementState.ATTACK;
 
             _animator.SetTrigger("onWeaponAttack");
-
-            if (dealState == DealState.NORMAL)
-            {
-                if (swordTrail.isStopped)
-                {
-                    swordTrail.Play();
-                    swordParticle.Play();
-                }
-            }
-
-            else if (dealState == DealState.DEALTIME)
+            if (dealState == DealState.DEALTIME)
             {
                 StartCoroutine(SlashAttack());
             }
