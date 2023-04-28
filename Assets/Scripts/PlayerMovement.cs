@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
         _animator = this.GetComponent<Animator>();
         _camera = Camera.main;
         _controller = this.GetComponent<CharacterController>();
-        run = false;
+        run = true;
         move = 0f;
         swordTrail.Stop();
         swordParticle.Stop();
@@ -62,10 +62,6 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
 
-        if (Input.GetKey(KeyCode.LeftShift)) // 달리기 활성화
-            run = true;
-        else
-            run = false; // 달리기 비활성화
 
         InputDodge();
         InputMovement();
