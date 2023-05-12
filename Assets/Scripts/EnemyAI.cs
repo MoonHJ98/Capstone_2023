@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.UI;
 using UnityEngine.AI;
 
 public class EnemyAI : MonoBehaviour
@@ -10,6 +10,9 @@ public class EnemyAI : MonoBehaviour
     NavMeshAgent navMeshAgent;
     CharacterController characterController;
     public Animator _animator;
+
+    public float hp = 100f;
+    public Image hpBar;
     enum State { Patroll, Detect, Attack, StateEnd };
     enum AniState { Idle, Walk, Jump, Punch_1, Punch_2, Run, JumpAttack, SideRoll, LeashAttack, AniStateEnd };
 
@@ -72,6 +75,8 @@ public class EnemyAI : MonoBehaviour
     float JumpAttackEnableDistance = 35f;
 
 
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -99,13 +104,26 @@ public class EnemyAI : MonoBehaviour
 
         checkOnce = true;
 
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
         UpdateState();
+
+
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            if (hp > 0f)
+            {
+                hp -= 10f;
+                hpBar.fillAmount = hp / 100f;
+            }
+        }
     }
+
 
 
     private void UpdateState()
@@ -245,7 +263,7 @@ public class EnemyAI : MonoBehaviour
             if(angle >= 270 && angle <= 350)
             {
                 //앞
-                Debug.Log("앞");
+                //Debug.Log("앞");
                 int pattern = Random.Range(0, 1);
                 switch (pattern)
                 {
@@ -263,7 +281,7 @@ public class EnemyAI : MonoBehaviour
             else if(angle > 170 && angle < 270)
             {
                 //오른쪽
-                Debug.Log("오른쪽");
+                //Debug.Log("오른쪽");
                 int pattern = Random.Range(0, 1);
                 switch (pattern)
                 {
@@ -281,7 +299,7 @@ public class EnemyAI : MonoBehaviour
             else if(angle >= 90 && angle <= 170)
             {
                 //뒤
-                Debug.Log("뒤");
+                //Debug.Log("뒤");
                 int pattern = Random.Range(0, 1);
                 switch (pattern)
                 {
@@ -299,7 +317,7 @@ public class EnemyAI : MonoBehaviour
             else if((angle >= 0 && angle <90) || (angle > 350 && angle < 360))
             {
                 //왼쪽
-                Debug.Log("왼쪽");
+                //Debug.Log("왼쪽");
                 int pattern = Random.Range(0, 1);
                 switch (pattern)
                 {
