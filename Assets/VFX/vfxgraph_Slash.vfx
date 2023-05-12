@@ -43,7 +43,7 @@ MonoBehaviour:
     x: 280
     y: -387
     width: 3335
-    height: 2794
+    height: 2774
 --- !u!114 &114350483966674976
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -96,7 +96,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"r":27.500391006469728,"g":28.73636245727539,"b":0.46348971128463747,"a":1.0}'
+      m_SerializableObject: '{"r":1.0,"g":0.3686274588108063,"b":0.0,"a":0.5490196347236633}'
     min: -Infinity
     max: Infinity
     enumValues: []
@@ -5096,7 +5096,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Vector3, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"x":0.800000011920929,"y":1.0,"z":1.0}'
+      m_SerializableObject: '{"x":0.07999999821186066,"y":0.800000011920929,"z":0.800000011920929}'
     m_Space: 2147483647
   m_Property:
     name: Scale
@@ -5247,8 +5247,9 @@ MonoBehaviour:
     - outputSlot: {fileID: 8926484042661614794}
       inputSlot: {fileID: 8926484042661614780}
     position: {x: 2950, y: 1322}
-    expandedSlots: []
-    expanded: 0
+    expandedSlots:
+    - {fileID: 8926484042661614794}
+    expanded: 1
 --- !u!114 &8926484042661614794
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5278,7 +5279,7 @@ MonoBehaviour:
       m_Type:
         m_SerializableType: UnityEngine.Color, UnityEngine.CoreModule, Version=0.0.0.0,
           Culture=neutral, PublicKeyToken=null
-      m_SerializableObject: '{"r":27.500391006469728,"g":28.73636245727539,"b":0.46348971128463747,"a":1.0}'
+      m_SerializableObject: '{"r":1.0,"g":0.3686274588108063,"b":0.0,"a":0.5490196347236633}'
     m_Space: 2147483647
   m_Property:
     name: o
