@@ -161,8 +161,11 @@ public class EnemyAI : MonoBehaviour
             checkOnce = false;
         }
 
-        _animator.SetInteger("Move", (int)AniState.Walk);
-        aniState = AniState.Walk;
+        _animator.SetInteger("Move", (int)AniState.Run);
+        aniState = AniState.Run;
+
+        Debug.Log(aniState);
+
 
 
         navMeshAgent.SetDestination(targetTransform.position);
