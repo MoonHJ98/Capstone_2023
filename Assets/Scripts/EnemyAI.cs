@@ -224,7 +224,6 @@ public class EnemyAI : MonoBehaviour
 
         if (characterController.collisionFlags == CollisionFlags.Below)
         {
-            int a = 10;
             if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Jump") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
             {
                 state = State.Attack;

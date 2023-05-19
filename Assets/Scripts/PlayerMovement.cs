@@ -60,8 +60,8 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
-
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         InputDodge();
         InputMovement();
         InputAttack();
