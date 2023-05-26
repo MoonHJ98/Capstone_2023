@@ -255,6 +255,8 @@ public class PlayerMovement : MonoBehaviour
             yield return new WaitForSeconds(slashes[i].delay);
             slashes[i].slashObject.SetActive(true);
         }
+        
+
 
         yield return new WaitForSeconds(1);
         DisableSlash();

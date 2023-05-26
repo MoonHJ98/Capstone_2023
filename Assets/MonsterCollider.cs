@@ -6,13 +6,9 @@ public class MonsterCollider : MonoBehaviour
 {
     public GameObject monster;
 
-    bool active = false;
-
-
     // Start is called before the first frame update
     void Start()
     {
-        //this.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
@@ -21,12 +17,6 @@ public class MonsterCollider : MonoBehaviour
 
 
     }
-
-    private void FixedUpdate()
-    {
-
-    }
-
     private void OnTriggerStay(Collider other)
     {
 
@@ -38,7 +28,6 @@ public class MonsterCollider : MonoBehaviour
             {
 
                 other.gameObject.GetComponent<PlayerMovement>().GetDamage(0.25f);
-                Debug.Log("att");
             }
 
         }
