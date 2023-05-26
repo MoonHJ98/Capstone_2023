@@ -184,7 +184,6 @@ public class PlayerMovement : MonoBehaviour
             _animator.SetTrigger("onWeaponAttack");
             if (dealState == DealState.DEALTIME)
             {
-                sword.GetComponent<Sword>().triggerActivate = true;
                 StartCoroutine(SlashAttack());
             }
         }

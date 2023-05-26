@@ -22971,6 +22971,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   triggerActivate: 0
+  player: {fileID: 1578846175}
 --- !u!65 &1382184048
 BoxCollider:
   m_ObjectHideFlags: 0

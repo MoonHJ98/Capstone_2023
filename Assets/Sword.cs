@@ -6,6 +6,9 @@ public class Sword : MonoBehaviour
 {
 
     public bool triggerActivate = false;
+
+    public GameObject player;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -20,9 +23,7 @@ public class Sword : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (triggerActivate == false)
-            return;
-
+        
         if (other.CompareTag("Monster"))
         {
             other.gameObject.GetComponent<EnemyAI>().GetDamage();
