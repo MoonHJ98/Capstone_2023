@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -43,6 +44,14 @@ public class PlayerMovement : MonoBehaviour
 
     public List<Slash> slashes;
 
+
+    public float hp = 100f;
+    public Image hpBar;
+
+    public GameObject sword;
+
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -60,12 +69,23 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        /*
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+        */
+
+
         InputDodge();
         InputMovement();
         InputAttack();
-
+        if (Input.GetKeyDown(KeyCode.Z))
+        {
+            if (hp > 0f)
+            {
+                hp -= 10f;
+                hpBar.fillAmount = hp / 100f;
+            }
+        }
 
     }
 
@@ -164,6 +184,7 @@ public class PlayerMovement : MonoBehaviour
             _animator.SetTrigger("onWeaponAttack");
             if (dealState == DealState.DEALTIME)
             {
+                sword.GetComponent<Sword>().triggerActivate = true;
                 StartCoroutine(SlashAttack());
             }
         }
@@ -249,4 +270,6 @@ public class PlayerMovement : MonoBehaviour
             slashes[i].slashObject.SetActive(false);
         }
     }
+
+
 }

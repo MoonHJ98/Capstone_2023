@@ -113,16 +113,13 @@ public class EnemyAI : MonoBehaviour
         UpdateState();
 
 
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            if (hp > 0f)
-            {
-                hp -= 10f;
-                hpBar.fillAmount = hp / 100f;
-            }
-        }
     }
 
+    public void GetDamage()
+    {
+        hp -= 10f;
+        hpBar.fillAmount = hp / 100f;
+    }
 
 
     private void UpdateState()
