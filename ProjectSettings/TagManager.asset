@@ -6,6 +6,8 @@ TagManager:
   tags:
   - Sword
   - Monster
+  - MonsterLeftHand
+  - MonsterRightHand
   layers:
   - Default
   - TransparentFX

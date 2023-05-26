@@ -78,15 +78,13 @@ public class PlayerMovement : MonoBehaviour
         InputDodge();
         InputMovement();
         InputAttack();
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            if (hp > 0f)
-            {
-                hp -= 10f;
-                hpBar.fillAmount = hp / 100f;
-            }
-        }
 
+    }
+
+    public void GetDamage(float damage)
+    {
+        hp -= damage;
+        hpBar.fillAmount = hp / 100f;
     }
 
     void InputMovement()

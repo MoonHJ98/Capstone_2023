@@ -23,7 +23,8 @@ public class Sword : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (player.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Attack1"))
+        if (player.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Attack1") ||
+            player.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("Attack2"))
         {
             if (other.CompareTag("Monster"))
             {
