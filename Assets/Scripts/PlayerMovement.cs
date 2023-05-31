@@ -44,11 +44,17 @@ public class PlayerMovement : MonoBehaviour
 
     public List<Slash> slashes;
 
+    bool shoot = false;
+    float shootTime = 0.9f;
+    float dur = 0f;
+
 
     public float hp = 100f;
     public Image hpBar;
 
     public GameObject sword;
+
+    bool attacktrigger = false;
 
 
 
@@ -63,7 +69,9 @@ public class PlayerMovement : MonoBehaviour
         run = true;
         move = 0f;
 
-        DisableSlash();
+        DisableSlash(0);
+        DisableSlash(1);
+
     }
 
     // Update is called once per frame
@@ -74,6 +82,46 @@ public class PlayerMovement : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         */
 
+        attacktrigger = false;
+
+        if (movementState == MovementState.ATTACK)
+            attacktrigger = true;
+
+
+        Debug.Log(attacktrigger);
+
+        if(_animator.GetCurrentAnimatorStateInfo(0).IsName("Attack1") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1.0f)
+            movementState = MovementState.IDLE;
+
+
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("charging") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1.0f)
+        {
+            _animator.SetInteger("charging", 2);
+            shoot = true;
+            //if (shootOnce)
+            //{
+            //    this.gameObject.GetComponent<GroundSlashShooter>().ShootProjectile();
+            //    shootOnce = false;
+            //}
+        }
+
+        if(shoot)
+        {
+            dur += Time.deltaTime;
+
+            if(dur >= shootTime)
+            {
+                this.gameObject.GetComponent<GroundSlashShooter>().ShootProjectile();
+                shoot = false;
+                dur = 0f;
+                
+            }
+        }
+
+        if (_animator.GetCurrentAnimatorStateInfo(0).IsName("charging_attack") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime > 1.0f)
+        {
+            _animator.SetInteger("charging", 0);
+        }
 
         InputDodge();
         InputMovement();
@@ -94,6 +142,7 @@ public class PlayerMovement : MonoBehaviour
             _animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"))
             return;
 
+        
 
         keyCheck[0] = false;
         keyCheck[1] = false;
@@ -175,19 +224,24 @@ public class PlayerMovement : MonoBehaviour
     {
         //if (movementState == MovementState.DODGE)
         //    return;
+        
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
             movementState = MovementState.ATTACK;
 
             _animator.SetTrigger("onWeaponAttack");
-            if (dealState == DealState.DEALTIME)
-            {
-                StartCoroutine(SlashAttack());
-            }
+            StartCoroutine(SlashAttack());
         }
+
+        if(Input.GetMouseButtonDown(1))
+        {
+            _animator.SetInteger("charging", 1);
+        }
+
+
     }
 
-        void InputDodge()
+    void InputDodge()
     {
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Dodge"))
         {
@@ -250,24 +304,39 @@ public class PlayerMovement : MonoBehaviour
 
     IEnumerator SlashAttack()
     {
-        for (int i = 0; i < slashes.Count; ++i)
+        //for (int i = 0; i < slashes.Count; ++i)
+        //{
+        //    yield return new WaitForSeconds(slashes[i].delay);
+        //    slashes[i].slashObject.SetActive(true);
+        //}
+
+        if(attacktrigger == false)
         {
-            yield return new WaitForSeconds(slashes[i].delay);
-            slashes[i].slashObject.SetActive(true);
+            yield return new WaitForSeconds(slashes[0].delay);
+            slashes[0].slashObject.SetActive(true);
+            yield return new WaitForSeconds(1);
+            DisableSlash(0);
         }
-        
 
+        if(attacktrigger == true)
+        {
+            yield return new WaitForSeconds(slashes[1].delay);
+            slashes[1].slashObject.SetActive(true);
+            yield return new WaitForSeconds(1);
+            DisableSlash(1);
+        }
 
-        yield return new WaitForSeconds(1);
-        DisableSlash();
+        //yield return new WaitForSeconds(1);
+        //DisableSlash();
 
     }
-    void DisableSlash()
+    void DisableSlash(int index)
     {
-        for(int i = 0; i < slashes.Count; ++i)
-        {
-            slashes[i].slashObject.SetActive(false);
-        }
+        slashes[index].slashObject.SetActive(false);
+        //for (int i = 0; i < slashes.Count; ++i)
+        //{
+        //    slashes[i].slashObject.SetActive(false);
+        //}
     }
 
 

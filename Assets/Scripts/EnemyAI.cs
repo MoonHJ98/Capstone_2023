@@ -72,6 +72,10 @@ public class EnemyAI : MonoBehaviour
 
     private bool patternEnd;
 
+    bool clawEffectOnce = true;
+    public GameObject Claw_1;
+
+
 
 
 
@@ -104,7 +108,7 @@ public class EnemyAI : MonoBehaviour
         checkOnce = true;
 
 
-
+        Claw_1.SetActive(false);
     }
 
     // Update is called once per frame
@@ -500,13 +504,22 @@ public class EnemyAI : MonoBehaviour
     {
         _animator.SetInteger("Move", (int)AniState.Punch_2);
 
+        if(clawEffectOnce)
+        {
+            Claw_1.SetActive(true);
+            clawEffectOnce = false;
+        }
+
         if (_animator.GetCurrentAnimatorStateInfo(0).IsName("Punch_2") && _animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
         {
             aniState = _nextAniState;
+            Claw_1.SetActive(false);
+            clawEffectOnce = true;
             if (_patternEnd == true)
             {
                 checkOnce = true;
                 patternEnd = true;
+
             }
         }
     }

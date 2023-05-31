@@ -35,22 +35,22 @@ public class GroundSlashShooter: MonoBehaviour
         if (playerMoveScript.movementState == PlayerMovement.MovementState.DODGE)
             return;
 
-        if(Input.GetKey(KeyCode.Mouse1))
-        {
-            pressing += Time.deltaTime;
-        }
-
-        if (Input.GetKeyUp(KeyCode.Mouse1))
-        {
-            if (pressing >= shootProjectile)
-                ShootProjectile();
-
-            pressing = 0f;
-            StartCoroutine(cameraShake.Shake(0.2f, 0.025f));
-        }
+        //if(Input.GetKey(KeyCode.Mouse1))
+        //{
+        //    pressing += Time.deltaTime;
+        //}
+        //
+        //if (Input.GetKeyUp(KeyCode.Mouse1))
+        //{
+        //    if (pressing >= shootProjectile)
+        //        ShootProjectile();
+        //
+        //    pressing = 0f;
+        //    StartCoroutine(cameraShake.Shake(0.2f, 0.025f));
+        //}
     }
 
-    void ShootProjectile()
+    public void ShootProjectile()
     {
         direction = player.forward;
         
