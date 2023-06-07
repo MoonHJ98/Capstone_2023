@@ -23757,7 +23757,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1578846176}
-  projectile: {fileID: 111967958941570286, guid: aa728752c88eec24bb55982a634b96e6,
+  projectile: {fileID: 8057869420818460428, guid: c360b95372f337d45a31d3e057dbcc33,
     type: 3}
   fireRate: 2
   pressing: 0
